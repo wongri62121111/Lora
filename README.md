@@ -1,5 +1,5 @@
 # Lora
 
-.[The mascot of Lora, a Lua to Python cross-compiler.](https://alephrocco.com/wp-content/uploads/2022/01/51793832587_5c91132182_6k.jpg)
+![image](https://github.com/user-attachments/assets/c0455180-2eff-4fac-96ff-28ca391b72ab)
 
 A simple Lua to Python cross-compiler.
