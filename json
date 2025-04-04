@@ -1,0 +1,20 @@
+{
+    "literals": {
+        "count": 2,
+        "values": ["10", "hello"]
+    },
+    "operators": {
+        "count": 2,
+        "values": ["=", "+"]
+    },
+    "variables": {
+        "count": 5,
+        "values": ["x", "y", "add", "a", "b"],
+        "duplicates": []
+    },
+    "reserved_words": {
+        "count": 3,
+        "values": ["local", "function", "end"]
+    },
+    "total_lines_processed": 4
+}
