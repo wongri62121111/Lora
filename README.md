@@ -33,3 +33,8 @@ The tokenizer scans Lua code and categorizes each token using regular expression
 
 ## 🗂️ File Structure
 
+## 🛠️ How to Run
+1. Place your Lua file in the same directory.
+2. Run the tokenizer:
+   ```bash
+   python lua_tokenizer.py

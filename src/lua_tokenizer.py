@@ -1,5 +1,6 @@
 import re
-from lexer import lexer  # You must have a lexer.py file in the same folder
+import json
+from lexer import lexer  # Make sure lexer.py is in the same folder
 
 class LuaTokenizer:
     def __init__(self):
@@ -17,11 +18,13 @@ class LuaTokenizer:
         self.variables = {}
         self.reserved_words_used = []
         self.total_lines = 0
+        self.tokens = []  # This will store all tokens from lexer()
 
     def tokenize(self, file_path):
         with open(file_path, 'r') as file:
             source = file.read()
             tokens = lexer(source)
+            self.tokens = tokens  # Save the full token list for later use (e.g., parser)
 
             for token in tokens:
                 if token["type"] in ["STRING", "NUMBER", "BOOLEAN", "NIL"]:
@@ -34,6 +37,7 @@ class LuaTokenizer:
                     var = token["value"]
                     self.variables[var] = self.variables.get(var, 0) + 1
 
+            # Count non-comment lines only
             lines = [line for line in source.split('\n') if not line.strip().startswith('--')]
             self.total_lines = len(lines)
 
@@ -61,8 +65,12 @@ class LuaTokenizer:
 
 if __name__ == "__main__":
     tokenizer = LuaTokenizer()
-    tokenizer.tokenize("example.lua")  # Make sure this file exists!
+    tokenizer.tokenize("src/example.lua")  # Adjust path if needed
     report = tokenizer.generate_report()
 
-    import json
+    # Print the report
     print(json.dumps(report, indent=4))
+
+    # Save the report
+    with open("src/output.json", "w") as f:
+        json.dump(report, f, indent=4)
