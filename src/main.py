@@ -1,24 +1,40 @@
+# main.py
 from lua_tokenizer import LuaTokenizer
-from parser import parse_tokens
+from parser import Parser
+import os
 
 def main():
-    # Step 1: Tokenize Lua code
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    lua_file = os.path.join(script_dir, "example.lua")  # Updated path
+    
+    # Tokenize with line numbers
     tokenizer = LuaTokenizer()
-    tokenizer.tokenize("src/example.lua")  # Adjust path if needed
-    tokens = tokenizer.tokens  
-
-    # Step 2: Parse tokens into AST
-    ast_nodes = parse_tokens(tokens)
-
-    # Step 3: Translate AST to Python code
-    translated_lines = [node.translate() for node in ast_nodes]
-    python_code = "\n\n".join(translated_lines)
-
-    # Step 4: Output translated code
-    with open("src/output/translated.py", "w") as f:
-        f.write(python_code)
-
-    print("✅ Translation complete! Check: src/output/translated.py")
+    tokenizer.tokenize(lua_file, include_lines=True)  # Use the full path
+    
+    # Rest of your code remains the same...
+    parser = Parser(tokenizer.tokens)
+    ast = parser.parse()
+    
+    # Show symbol table and errors
+    parser.symbol_table.print_state()
+    
+    # Generate Python code
+    python_code = "\n\n".join(
+        node.translate(parser.symbol_table) 
+        for node in ast 
+        if node is not None
+    )
+    
+    # Add standard library stubs
+    stdlib = """
+# Lua standard library stubs
+def print(*args):
+    print(' '.join(str(arg) for arg in args))
+"""
+    
+    with open("output.py", "w") as f:
+        f.write(stdlib + "\n\n" + python_code)
 
 if __name__ == "__main__":
     main()

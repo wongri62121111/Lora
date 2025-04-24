@@ -2,8 +2,9 @@
 
 import re
 
-def lexer(source_code):
+def lexer(source_code, include_lines=False):
     tokens = []
+    lineno = 1  # Track line numbers
     keywords = {
         'and', 'break', 'do', 'else', 'elseif', 'end', 'false', 'for',
         'function', 'if', 'in', 'local', 'nil', 'not', 'or', 'repeat',
@@ -26,12 +27,26 @@ def lexer(source_code):
     for match in re.finditer(tok_regex, source_code):
         kind = match.lastgroup
         value = match.group()
+        
+        # Handle newlines for line counting
+        if '\n' in value:
+            lineno += value.count('\n')
+        
+        token = {
+            'type': kind,
+            'value': value,
+            'raw': value,
+            'lineno': lineno
+        }
+        
         if kind == 'SKIP':
             continue
         elif kind == 'NAME' and value in keywords:
-            tokens.append({'type': 'KEYWORD', 'value': value})
+            token['type'] = 'KEYWORD'
+            tokens.append(token)
         elif kind == 'MISMATCH':
             continue
         else:
-            tokens.append({'type': kind, 'value': value})
+            tokens.append(token)
+    
     return tokens

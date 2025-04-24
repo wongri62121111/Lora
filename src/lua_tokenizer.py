@@ -1,6 +1,7 @@
+# lua_tokenizer.py
 import re
 import json
-from lexer import lexer  # Make sure lexer.py is in the same folder
+from lexer import lexer  # Explicit import of lexer function
 
 class LuaTokenizer:
     def __init__(self):
@@ -18,15 +19,20 @@ class LuaTokenizer:
         self.variables = {}
         self.reserved_words_used = []
         self.total_lines = 0
-        self.tokens = []  # This will store all tokens from lexer()
+        self.tokens = []
 
-    def tokenize(self, file_path):
+    def tokenize(self, file_path, include_lines=False):
         with open(file_path, 'r') as file:
             source = file.read()
-            tokens = lexer(source)
-            self.tokens = tokens  # Save the full token list for later use (e.g., parser)
+            lines = source.split('\n')
+            self.total_lines = len([line for line in lines if not line.strip().startswith('--')])
+            
+            if include_lines:
+                self.tokens = self._tokenize_with_lines(source)
+            else:
+                self.tokens = lexer(source)  # Now properly references the imported lexer function
 
-            for token in tokens:
+            for token in self.tokens:
                 if token["type"] in ["STRING", "NUMBER", "BOOLEAN", "NIL"]:
                     self.literals.append(token["value"])
                 elif token["type"] == "OP":
@@ -37,9 +43,18 @@ class LuaTokenizer:
                     var = token["value"]
                     self.variables[var] = self.variables.get(var, 0) + 1
 
-            # Count non-comment lines only
-            lines = [line for line in source.split('\n') if not line.strip().startswith('--')]
-            self.total_lines = len(lines)
+    def _tokenize_with_lines(self, source):
+        tokens = []
+        lines = source.split('\n')
+        for line_num, line in enumerate(lines, 1):
+            if line.strip().startswith('--'):
+                continue  # Skip comments
+                
+            line_tokens = lexer(line)  # Now properly references the imported lexer function
+            for token in line_tokens:
+                token['lineno'] = line_num
+            tokens.extend(line_tokens)
+        return tokens
 
     def generate_report(self):
         return {
@@ -65,12 +80,6 @@ class LuaTokenizer:
 
 if __name__ == "__main__":
     tokenizer = LuaTokenizer()
-    tokenizer.tokenize("src/example.lua")  # Adjust path if needed
+    tokenizer.tokenize("src/example.lua")
     report = tokenizer.generate_report()
-
-    # Print the report
     print(json.dumps(report, indent=4))
-
-    # Save the report
-    with open("src/output.json", "w") as f:
-        json.dump(report, f, indent=4)
