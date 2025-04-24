@@ -1,40 +1,67 @@
-# Lora
+# README.md
 
-![image](https://github.com/user-attachments/assets/c0455180-2eff-4fac-96ff-28ca391b72ab)
+```markdown
+# Lora - Lua to Python Cross-Compiler
 
-A simple Lua to Python cross-compiler.
-# Lua to Python Tokenizer
-Tokenizer for Lua source code written in Python as part of CMPSC 470
+![Lua and Python logos](https://example.com/path/to/image.png)
 
+A compiler that translates Lua source code into equivalent Python code while preserving functionality.
 
-# Lua to Python Tokenizer
+## Features
+- Full Lua syntax support
+- Type preservation
+- Scope-aware symbol table
+- Error reporting with line numbers
+- Standard library stubs
 
-A Python-based tokenizer for Lua source code, developed as part of CMPSC 470 (Spring 2025) at Penn State. The tokenizer processes Lua files and outputs a structured report of tokens including literals, operators, variables, reserved words, and more.
+## Installation
+```bash
+git clone https://github.com/wongri62121111/Lora
+cd Lora/src
+```
 
-## 🧠 Authors
+## Usage
+1. Place your Lua files in the src directory
+2. Run the compiler:
+```bash
+python main.py
+```
+3. Generated Python code will be in output.py
+
+## Examples
+**Lua Input:**
+```lua
+local t = {name = "Lua", version = 5.4}
+```
+
+**Python Output:**
+```python
+t = {'name': 'Lua', 'version': 5.4}  # line 1
+```
+
+## File Structure
+```
+src/
+├── ast_nodes.py       # AST node definitions
+├── lexer.py           # Lexical analyzer
+├── lua_tokenizer.py   # Tokenizer interface
+├── main.py            # Main compiler script
+├── parser.py          # Syntax parser
+└── symbol_table.py    # Symbol table implementation
+```
+
+## Testing
+Run test cases:
+```bash
+python test_tokenizer.py
+```
+
+## Limitations
+- No metatable support
+- Limited standard library
+- No coroutine support
+
+## Contributors
 - Tommy Lu
 - Ishraq Syed
 - Richard Wong
-
-## 📚 Course
-CMPSC 470, Section 001 – Spring 2025
-
-## 🧩 Project Overview
-
-The tokenizer scans Lua code and categorizes each token using regular expressions and lexical analysis via `lexer.py`. The tool skips over comments, handles Lua syntax features, and produces a JSON-formatted report.
-
-### ✅ Features
-- Handles literals: numbers, strings, booleans, nil
-- Detects arithmetic, logical, and relational operators
-- Recognizes Lua reserved keywords
-- Counts unique and duplicate variables
-- Skips single-line and multi-line comments
-- Supports integration with `lexer.py`
-
-## 🗂️ File Structure
-
-## 🛠️ How to Run
-1. Place your Lua file in the same directory.
-2. Run the tokenizer:
-   ```bash
-   python lua_tokenizer.py
