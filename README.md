@@ -1,9 +1,6 @@
-# README.md
+![image](https://github.com/user-attachments/assets/48458c05-a4b2-42cc-a5e2-6e8143730384)
 
-```markdown
 # Lora - Lua to Python Cross-Compiler
-
-![Lua and Python logos](https://example.com/path/to/image.png)
 
 A compiler that translates Lua source code into equivalent Python code while preserving functionality.
 
